@@ -52,7 +52,7 @@ function walkTo()
 {
 	g.goTo(toX, toY);
 	var playerCoords = g.getPlayerCoords();
-	if(Math.abs(playerCoords.x - toX) < precision && Math.abs(playerCoords.y - toY) < precision)
+	if(getDistance()<precision)
 		{
 			WalkToSwitch = false;
 		}
@@ -179,6 +179,25 @@ function getDirection()
 		
 	  return c;
 }
+
+function getDistance(objectOne, ObjectTwo) {
+	  var dx = objectOne.x - ObjectTwo.x;
+	  var dy = objectOne.y - ObjectTwo.y;
+	  return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+	}
+
+function getDistance(objectOne) {
+	  var dx = objectOne.x - toX;
+	  var dy = objectOne.y - toY;
+	  return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+	}
+
+function getDistance() {
+	var playerCoords = g.getPlayerCoords();
+	  var dx = playerCoords.x - toX;
+	  var dy = playerCoords.y - toY;
+	  return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+	}
 
 /** Gets a random direction count between min an max.
  * @param min
