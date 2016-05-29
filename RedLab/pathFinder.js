@@ -85,12 +85,12 @@ function walkDefaultToggle()
 {
 	if(RedWalkDefault)
 		{
-		print('Red Walking to target has stopped...');
+		print('Red Walking has stopped...');
 		RedWalkDefault = false;
 		}
 	else
 		{
-		print('Red Walking to target has resumed...');
+		print('Red Walking has resumed...');
 		RedWalkDefault = true;
 		}
 }
