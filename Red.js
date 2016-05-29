@@ -101,6 +101,7 @@ function startRedAutoWalking() {
 		print('Start the auto walk steps...');
 		autoWalkingTimerId = setInterval(function() 
 		  {
+			if(RedAutoWalkingSwitch)
 	  		walk();
 		  }, second*5);
 	}
