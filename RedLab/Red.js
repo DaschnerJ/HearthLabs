@@ -109,7 +109,6 @@ function startRedAutoWalking() {
 			if(RedAutoWalkingSwitch)
 	  		walk();
 		  }, second*5);
-		g.waitForPf()
 	}
 }
 
