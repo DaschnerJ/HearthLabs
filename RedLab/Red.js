@@ -52,11 +52,11 @@ function onRedUserInput(input) {
   //Checks for red command
   if(input == 'red walk')
   {
-	  walkDefaultToggle()
+	  walkDefaultToggle();
   }
   else if(input == 'red target walk')
   {
-	  walkToToggle()
+	  walkToToggle();
   }
   else if(input == 'red auto walk')
   {
