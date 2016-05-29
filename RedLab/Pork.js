@@ -1,9 +1,10 @@
 
 var lookForCurious = false;
+var worldCheckerId = null;
 
 function onPorkGameLoaded() {
 	
-  //Nothing
+  checkMap();
   
 }
 
@@ -15,6 +16,7 @@ function onPorkGameLoaded() {
  * @param {Number} coords.y y coordinate of the curio
  */
 function onPorkCurioFound(id, name, coords) {
+	stopAutoWalking();
 	if(lookForCurious) {
 		  if (g == null) {
 		    return;
@@ -22,22 +24,25 @@ function onPorkCurioFound(id, name, coords) {
 		  
 		  print('Curio "' + name + '" found, trying to pick it...');
 		  
-		  if(name != "ladybug") {
-		  stopAutoWalking();
 		  while(g.getPlayerCoords().x != coords.x && g.getPlayerCoords.y != coords.y){
-		  g.goTo(coords.x, coords.y);
-		  print('Not there yet... Waiting');
-		  sleep(1000);
+			  
+			   if(lookForCurious) {
+				   g.goTo(coords.x, coords.y);
+				   sleep(1000);
+		  
+			 	}
+			 	else
+				 {
+				 break;
+				 }
 		  }
 		  g.pickItem(id);
 		  sleep(5000);
 		  
 		  print('Picked ' + name + ".");
 		  
-		  }
-		  
-		  startAutoWalking();
-	}
+	}	  
+	startAutoWalking();
 }
 
 /** It is fired when a creature was encountered (once for each of them)
@@ -76,10 +81,12 @@ function onPorkUserInput(input) {
 	if(input == 'findcurious') {
 		if(lookForCurious) {
 			lookForCurious = false;
+			print('Curious Searched: Disabled');
 		}
 		else
 		{
 			lookForCurious = true;
+			print('Curious Searched: Enabled');
 		}
 	}
 }
@@ -134,6 +141,16 @@ function isPorkAggr(animal) {
  */
 function getPorkMentalWeight(curioName) {
   //Nothing.
+}
+
+function checkMap() {
+	
+
+	worldCheckId = setInterval(function() {
+	if (RedAutoWalkingSwitch)
+			checkTheMap();
+	}, second * 10);
+	
 }
 
 function checkTheMap() {
