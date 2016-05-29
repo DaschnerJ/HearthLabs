@@ -50,7 +50,7 @@ function walk()
 
 function walkTo()
 {
-	goTo(toX, toY);
+	g.goTo(toX, toY);
 	var playerCoords = g.getPlayerCoords();
 	if(Math.abs(playerCoords.x - toX) < precision && Math.abs(playerCoords.y - toY) < precision)
 		{
@@ -111,7 +111,7 @@ function walkAutoToggle()
 
 function defaultWalk()
 {
-	direction();
+		direction();
 		var playerCoords = g.getPlayerCoords();
 		g.goTo(playerCoords.x + xDirection*getRandomInt(0,200), yDirection*playerCoords.y + getRandomInt(0,200));
 		if(debug)
