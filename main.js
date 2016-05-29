@@ -540,20 +540,20 @@ var setTimeout,
         ids[id] = new JavaAdapter(java.util.TimerTask, {run: fn});
         timer.schedule(ids[id], delay);
         return id;
-    }
+    };
 
     clearTimeout = function(id) {
         ids[id].cancel();
         timer.purge();
         delete ids[id];
-    }
+    };
 
     setInterval = function(fn, delay) {
         var id = counter++; 
         ids[id] = new JavaAdapter(java.util.TimerTask, {run: fn});
         timer.schedule(ids[id], delay, delay);
         return id;
-    }
+    };
 
     clearInterval = clearTimeout;
 
