@@ -1,7 +1,13 @@
 /**
  * 
  */
- var RedAutoWalkingSwitch = true;
+ var RedAutoWalkingSwitch = false;
+ 
+ var RedWalkDefault = false;
+ 
+ var WalkToSwitch = false;
+ 
+ 
  
 var directionCount = 0;
 
@@ -10,6 +16,10 @@ var yDirection = 0;
 
 var oldPlayerX = 0;
 var oldPlayerY = 0;
+
+var toX = 0;
+var toY = 0;
+var toP = 0;
 
 function gameStart()
 {
@@ -24,14 +34,77 @@ function gameStart()
 
 function walk()
 {
+	if(RedWalkDefault)
+		{
+			defaultWalk();
+		}
+	else if(WalkToSwitch)
+	{
+		walkTo();
+	}
+	else
+	{
+		
+	}
+}
+
+function walkTo()
+{
+	goTo(toX, toY);
+	var playerCoords = g.getPlayerCoords();
+	if(Math.abs(playerCoords.x - toX) < precision && Math.abs(playerCoords.y - toY) < precision)
+		{
+			WalkToSwitch = false;
+		}
+}
+
+function walkToStart(x, y, precision)
+{
+	toX = x;
+	toY = y;
+	toP = precision;
+	WalkToSwitch = true;
+	walkTo();
+}
+
+function walkToToggle()
+{
+	if(WalkToSwitch)
+		{
+		print('Walking to target has stopped...');
+		WalkToSwitch = false;
+		}
+	else
+		{
+		print('Walking to target has resumed...');
+		WalkToSwitch = true;
+		}
+}
+
+function walkDefaultToggle()
+{
+	if(RedWalkDefault)
+		{
+		print('Red Walking to target has stopped...');
+		RedWalkDefault = false;
+		}
+	else
+		{
+		print('Red Walking to target has resumed...');
+		RedWalkDefault = true;
+		}
+}
+
+function defaultWalk()
+{
 	direction();
-	  		var playerCoords = g.getPlayerCoords();
-	  		g.goTo(playerCoords.x + xDirection*getRandomInt(0,200), yDirection*playerCoords.y + getRandomInt(0,200));
-	  		if(debug)
-	  		print('Decrease the step count...');
-	  		directionCount = directionCount - 1;
-	  		if(debug)
-	  		print('Sleep on walk...');
+		var playerCoords = g.getPlayerCoords();
+		g.goTo(playerCoords.x + xDirection*getRandomInt(0,200), yDirection*playerCoords.y + getRandomInt(0,200));
+		if(debug)
+		print('Decrease the step count...');
+		directionCount = directionCount - 1;
+		if(debug)
+		print('Sleep on walk...');
 }
 
 function direction()
