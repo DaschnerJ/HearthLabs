@@ -50,16 +50,13 @@ function onRedFlowerMenuOpen(options) {
  */
 function onRedUserInput(input) {
   //Checks for red command
-  if(input == 'red walk off')
+  if(input == 'red walk')
   {
-	  RedAutoWalkingSwitch = false;
-	  print('Red Walking has halted.');
+	  walkDefaultToggle()
   }
-  else if(input == 'red walk on')
+  else if(input == 'red target walk')
   {
-	  RedAutoWalkingSwitch = true;
-	  startAutoWalking();
-	  print('Red Walking has resumed.');
+	  walkToToggle()
   }
   else
   {
