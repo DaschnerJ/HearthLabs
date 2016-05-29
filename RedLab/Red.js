@@ -66,6 +66,10 @@ function onRedUserInput(input) {
   {
 	  printObjectNamesOnScreen();
   }
+  else if(input == 'chop trees')
+  {
+	  chopperToggle();
+  }
   else
   {
 	  
