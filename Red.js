@@ -58,7 +58,8 @@ function onRedUserInput(input) {
   else if(input == 'red walk on')
   {
 	  RedAutoWalkingSwitch = true;
-	  print('Red Walking has halted.');
+	  startAutoWalking();
+	  print('Red Walking has resumed.');
   }
   else
   {
