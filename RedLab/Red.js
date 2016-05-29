@@ -62,6 +62,10 @@ function onRedUserInput(input) {
   {
 	  walkAutoToggle();
   }
+  else if(input == 'print objects')
+  {
+	  printObjectNamesOnScreen();
+  }
   else
   {
 	  
