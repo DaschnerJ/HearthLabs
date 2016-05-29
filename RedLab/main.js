@@ -543,7 +543,6 @@ var setTimeout,
     };
 
     clearTimeout = function(id) {
-        ids[id].cancel();
         timer.purge();
         delete ids[id];
     };
