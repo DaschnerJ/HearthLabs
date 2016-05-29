@@ -1,6 +1,11 @@
 
 var lookForCurious = false;
 var worldCheckerId = null;
+var checkedTrees = [];
+var finishedTask = false;
+var working = false;
+var pickBoughs = false;
+var previousLocation = null;
 
 function onPorkGameLoaded() {
 	
@@ -71,7 +76,39 @@ function onPorkPlayerFound(id, isKin, coords) {
  * @param {Array} options Available flower menu options
  */
 function onPorkFlowerMenuOpen(options) {
-  // ignored
+	
+	if(pickBoughs){
+	
+	var foundBough = false;
+	
+	for(var i = 0; i < options.length; i++) {
+		
+		if(options[i] == 'Take bough') {
+			
+			g.chooseFlowerMenuOption('Take bough');
+			
+			foundBough = true;
+			
+			finishedTask = true;
+			
+		}
+		
+	}
+	
+	if(!foundBough) {
+		
+		g.mapRightClick(g.getPlayerCoords().x, g.getPlayerCoords().y);
+		
+		g.chooseFlowerMenuOption(options[0]);
+		
+		g.goTo(g.getPlayerCoords().x + 1, g.getPlayerCoords().y + 1);
+		
+		finishedTask = true;
+		
+	}
+	
+	}
+	
 }
 
 /** It is fired when the user enters a command in the console window
@@ -87,6 +124,17 @@ function onPorkUserInput(input) {
 		{
 			lookForCurious = true;
 			print('Curious Searched: Enabled');
+		}
+	}
+	else if(input == 'pickboughs') {
+		if(pickBoughs) {
+			pickBoughs = false;
+			print('Bough Picking: Disabled');
+		}
+		else
+		{
+			pickBoughs = true;
+			print('Bough Picking: Enabled');
 		}
 	}
 }
@@ -144,35 +192,227 @@ function getPorkMentalWeight(curioName) {
 }
 
 function checkMap() {
-	
 
 	worldCheckId = setInterval(function() {
-	if (RedAutoWalkingSwitch)
-			checkTheMap();
+		if(g != null && !working) {
+			checkTheMap();	
+		}
 	}, second * 10);
 	
 }
 
 function checkTheMap() {
 	
-	print('Checking map.');
+	if(pickBoughs) {
 	
-	var checked = ['pine','spruce'];
+	working = true;
 	
-	for(var i = 0; i < checked.size; i++) {
+	var checked = ['spruce','pine',"alder", "appletree", "ash", "aspen", "baywillow", "beech", 
+	               "birch", "birdcherrytree" ,"buckthorn" ,"cedar" ,"cherry" ,"chestnuttree",
+	               "conkertree", "corkoak", "crabappletree", "cypress", "elm", "fir", "goldenchain", "hazel",
+	               "hornbeam" ,"juniper" ,"kingsoak" ,"larch" ,"laurel" ,"linden" ,"maple",
+	               "mulberry" ,"oak" ,"olivetree" ,"peatree" ,"pine" ,"planetree" ,"plumtree",
+	               "poplar" ," rowan" ,"sallow" ,"spruce" ,"sweetgum" ,"walnuttree" ,"whitebeam",
+	               "willow" ,"yew"];
+	
+	for(var i = 0; i < checked.length; i++) {
 	
 	var mapObjects = g.getMapObjects(checked[i]);
 	
 	print('Checking for ' + checked[i]);
 	
-	for(var index = 0; index < mapObjects.size() ; index++) {
+	for(var index = 0; index < mapObjects.length ; index++) {
+		
+		if(pickBoughs) {
 		
 		var map = mapObjects[index];
 		
-		print('Found ' + map.name + ' with id of ' + map.id);
+		// - getMapObjects(name)
+		//   Returns an array of map objects with the specified name (each of them has `name`, `fullName`, `id` and `coords` properties)
+		
+		var found = true;
+		
+		var invNotFull = true;
+		
+		if(g.getFreeCharInvCellsCount() >= 8) {
+			
+		}
+		else
+		{
+			invNotFull = false;
+		}
+		
+		if(invNotFull) {
+		
+		for(var x = 0; checkedTrees.length < x; x++) {
+						
+			if(checkedTrees[x] == map.id) {
+				
+				found = false;
+				
+			}
+			
+		}
+		
+		if(found) {
+			
+			print('Found appropriate match.');
+			
+			// - mapObjectRightClick(id)
+			//   Clicks an object with the specified ID via the right mouse button
+			//   NOTE That you can't use this function for some specific objects (for example, tables -- use `openTable` function instead)
+			//   Returns `true` on success or `false` otherwise
+			
+			var xBackup = map.coords.x;
+			
+			var yBackup = map.coords.y;
+			
+			var randomChangeX = getRandomInt(-10,10);
+			
+			var randomChangeY = getRandomInt(-10,10);
+			
+			var timesStuck = 0;
+			
+			var totalTimesStuck = 0;
+			
+			while(g.getPlayerCoords().x != xBackup + randomChangeX && g.getPlayerCoords().y != yBackup + randomChangeY) {
+				
+				if((g.getPlayerCoords().x - (xBackup + randomChangeX)) < 5 && (g.getPlayerCoords().x - (xBackup + randomChangeX)) > -5 && (g.getPlayerCoords().y - (yBackup + randomChangeY)) < 5 && (g.getPlayerCoords().y - (yBackup + randomChangeY)) > -5) {
+					
+					break;
+					
+				}
+				
+				if(!isStuck()) {
+					
+				timesStuck = 0;
+				
+				walkToStart(xBackup + randomChangeX, yBackup + randomChangeY, 10);
+				
+				print('Going');
+				
+				}
+				else
+				{
+				
+				timesStuck++;
+				
+				totalTimesStuck++;
+				
+				if(totalTimesStuck > 20) {
+					
+					print('Stuck too many times... Skipping.');
+					
+					finishedTask = true;
+					
+					break;
+					
+				}
+				
+				print('Stuck');
+				
+				if(timesStuck < 4) {
+					
+					randomChangeX = getRandomInt(-10,10);
+					
+					randomChangeY = getRandomInt(-10,10);
+					
+					walkToStart(xBackup + randomChangeX, yBackup + randomChangeY, 5);
+					
+					if(g.getPlayerCoords().x == xBackup + randomChangeX && g.getPlayerCoords().y == yBackup + randomChangeY) {
+						
+						break;
+						
+					}
+					
+				}
+				else
+				{
+					
+					randomChangeX = getRandomInt(-25,25);
+					
+					randomChangeY = getRandomInt(-25,25);
+					
+					walkToStart(g.getPlayerCoords().x + randomChangeX, g.getPlayerCoords().y + randomChangeY, 5);
+					
+					randomChangeX = getRandomInt(-10,10);
+					
+					randomChangeY = getRandomInt(-10,10);
+					
+				}
+				
+				}
+			
+				sleep(second * 1);
+				
+			}
+			
+			g.mapRightClick(g.getPlayerCoords().x, g.getPlayerCoords().y);
+			
+			print('Found tree');
+			
+			sleep(second);
+			
+			g.mapObjectRightClick(map.id);
+			
+			while(!finishedTask) {
+				
+				print('Waiting');
+				
+				sleep(second);
+				
+			}
+			
+			finishedTask = false;
+			
+			print('Finished');
+			
+			g.waitForTaskToFinish();
+			
+			checkedTrees[checkedTrees.length] = map.id;
+			
+		}
+		
+		}
+		else
+		{
+			
+			index--;
+			
+			index = Math.max(0, index);
+			
+			g.goTo(g.getPlayerCoords().x,g.getPlayerCoords().y);
+			
+			sleep(100);
+			
+			g.travelToHearthFire();
+			
+			sleep(10000);
+			
+			g.waitForTaskToFinish();
+			
+			
+			
+		}
+		
+		}
+		else
+		{
+			
+			working = false;
+			
+		}
 		
 	}
 	
+	}
+	
+	working = false;
+	
+	}
+	else
+	{
+		working = false;
 	}
 	
 }
