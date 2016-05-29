@@ -58,6 +58,10 @@ function onRedUserInput(input) {
   {
 	  walkToToggle()
   }
+  else if(input == 'red auto walk')
+  {
+	  walkAutoToggle();
+  }
   else
   {
 	  
