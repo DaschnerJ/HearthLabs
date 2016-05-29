@@ -1,7 +1,7 @@
 /**
  * 
  */
- var RedAutoWalkingSwitch = false;
+ var RedAutoWalkingSwitch = true;
  
  var RedWalkDefault = false;
  
@@ -85,13 +85,27 @@ function walkDefaultToggle()
 {
 	if(RedWalkDefault)
 		{
-		print('Red Walking to target has stopped...');
+		print('Red Walking has stopped...');
 		RedWalkDefault = false;
 		}
 	else
 		{
-		print('Red Walking to target has resumed...');
+		print('Red Walking has resumed...');
 		RedWalkDefault = true;
+		}
+}
+
+function walkAutoToggle()
+{
+	if(RedAutoWalkingSwitch)
+		{
+		print('Red Auto Walking has stopped...');
+		RedAutoWalkingSwitch = false;
+		}
+	else
+		{
+		print('Red Auto Walking has resumed...');
+		RedAutoWalkingSwitch = true;
 		}
 }
 
