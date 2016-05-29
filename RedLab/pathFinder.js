@@ -52,7 +52,7 @@ function walkTo()
 {
 	g.goTo(toX, toY);
 	var playerCoords = g.getPlayerCoords();
-	if(getDistance()<precision)
+	if(getDistance()<toP)
 		{
 			WalkToSwitch = false;
 		}
@@ -106,6 +106,21 @@ function walkAutoToggle()
 		{
 		print('Red Auto Walking has resumed...');
 		RedAutoWalkingSwitch = true;
+		}
+}
+
+function chopperToggle()
+{
+	if(choppingTrees)
+		{
+		print('Chopping has stopped...');
+		choppingTrees = false;
+		}
+	else
+		{
+		print('Chopping has resumed...');
+		choppingTrees = true;
+		chopWood();
 		}
 }
 
