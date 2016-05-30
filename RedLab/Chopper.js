@@ -36,7 +36,7 @@ function waitForStamina(target)
 	stamina = g.getStamina()
 	if(stamina < target)
 	{
-		var secondsToWait = Math.ceil((target-stamina)*0.15);
+		var secondsToWait = Math.ceil((target-stamina)*6.666);
 		print('Stamina not enough, it is: ' + stamina);
 		print('Waiting '+secondsToWait+' seconds...')
 		sleep(second*secondsToWait);
