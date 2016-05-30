@@ -42,12 +42,14 @@ function onRedPlayerFound(id, isKin, coords) {
  * @param {Array} options Available flower menu options
  */
 function onRedFlowerMenuOpen(options) {
-	g.chooseFlowerMenuOption('Chop');
-	sleep(second*20);
-	print('Chopping and waiting for task to finish.');
-	g.waitForTaskToFinish();
-	print('Task finished, checking if the tree is still there.');
-	if(targetTreeCount <= 3)
+	if(choppingTrees)
+		{
+		g.chooseFlowerMenuOption('Chop');
+		sleep(second*20);
+		print('Chopping and waiting for task to finish.');
+		g.waitForTaskToFinish();
+		print('Task finished, checking if the tree is still there.');
+		if(targetTreeCount <= 3)
 		{
 			regenStamina();
 			walkTo(targetTree.x+getRandomInt(-20,20), targetTree.y+getRandomInt(-20,20), 10);
@@ -55,14 +57,15 @@ function onRedFlowerMenuOpen(options) {
 			targetTreeCount = targetTreeCount+1;
 			onRedFlowerMenuOpen(options);
 		}
-	else
-	{
-		finishedCutting = true;
-		targetTreeCount = 0;
-		treeChoppedList.push(targetTree);
-		targetTree = null;
-		chopWood();
+		else
+		{
+			inishedCutting = true;
+			targetTreeCount = 0;
+			treeChoppedList.push(targetTree);
+			targetTree = null;
+			chopWood();
 		
+		}
 	}
   // ignored
 }
