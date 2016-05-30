@@ -97,7 +97,7 @@ function cutTree()
 	print('Chopping and waiting for task to finish.');
 	g.waitForTaskToFinish();
 	print('Task finished, checking if the tree is still there.');
-	if(targetTreeCount <= 4)
+	if(targetTreeCount <= 10)
 	{
 		targetTreeCount++;
 		print('Target tree probably still there, count is: ' + targetTreeCount);

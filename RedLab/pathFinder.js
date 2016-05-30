@@ -153,6 +153,7 @@ function logCollectToggle()
 		{
 		print('Log Collecting has stopped...');
 		collectLogs = false;
+		WalkToSwitch = false;
 		}
 	else
 		{
