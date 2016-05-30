@@ -7,6 +7,8 @@ var finishedTask = false;
 var working = false;
 var pickBoughs = false;
 var previousLocation = null;
+var storedPlayerX = 0;
+var storedPlayerY = 0;
 
 function onPorkGameLoaded() {
 	
@@ -198,13 +200,13 @@ function checkMap() {
 
 	worldCheckId = setInterval(function() {
 		if(g != null && !working) {
-			checkTheMap();	
+			pickBoughScript();
 		}
 	}, second * 10);
 	
 }
 
-function checkTheMap() {
+function pickBoughScript() {
 	
 	if(pickBoughs) {
 	
@@ -286,11 +288,11 @@ function checkTheMap() {
 					
 				}
 				
-				if(!isStuck()) {
+				if(!isPorkStuck()) {
 					
 				timesStuck = 0;
 				
-				walkToStart(xBackup + randomChangeX, yBackup + randomChangeY, 10);
+				g.goTo(xBackup + randomChangeX, yBackup + randomChangeY);
 				
 				print('Going');
 				
@@ -320,7 +322,7 @@ function checkTheMap() {
 					
 					randomChangeY = getRandomInt(-15,15);
 					
-					walkToStart(xBackup + randomChangeX, yBackup + randomChangeY, 5);
+					g.goTo(xBackup + randomChangeX, yBackup + randomChangeY);
 					
 					if(g.getPlayerCoords().x == xBackup + randomChangeX && g.getPlayerCoords().y == yBackup + randomChangeY) {
 						
@@ -336,7 +338,7 @@ function checkTheMap() {
 					
 					randomChangeY = getRandomInt(-25,25);
 					
-					walkToStart(g.getPlayerCoords().x + randomChangeX, g.getPlayerCoords().y + randomChangeY, 5);
+					g.goTo(g.getPlayerCoords().x + randomChangeX, g.getPlayerCoords().y + randomChangeY);
 					
 					randomChangeX = getRandomInt(-15,15);
 					
@@ -410,7 +412,7 @@ function checkTheMap() {
 			
 			print('Checking for stockpile-bough');
 			
-			for(var ind = 0; ind < stockpiles.length ; ind) {
+			for(var ind = 0; ind < stockpiles.length ; ind++) {
 				
 				var stockpile = stockpiles[ind];
 				
@@ -448,11 +450,11 @@ function checkTheMap() {
 							
 						}
 						
-						if(!isStuck()) {
+						if(!isPorkStuck()) {
 							
 						timesStucks = 0;
 						
-						walkToStart(xBackups + randomChangeXs, yBackups + randomChangeYs, 10);
+						g.goTo(xBackups + randomChangeXs, yBackups + randomChangeYs);
 						
 						print('Going to stockpile');
 						
@@ -480,7 +482,7 @@ function checkTheMap() {
 							
 							randomChangeYs = getRandomInt(-20,20);
 							
-							walkToStart(xBackups + randomChangeXs, yBackups + randomChangeYs, 5);
+							g.goTo(xBackups + randomChangeXs, yBackups + randomChangeYs);
 							
 							if(g.getPlayerCoords().x == xBackups + randomChangeXs && g.getPlayerCoords().y == yBackups + randomChangeYs) {
 								
@@ -496,7 +498,7 @@ function checkTheMap() {
 							
 							randomChangeYs = getRandomInt(-25,25);
 							
-							walkToStart(g.getPlayerCoords().x + randomChangeXs, g.getPlayerCoords().y + randomChangeYs, 5);
+							g.goTo(g.getPlayerCoords().x + randomChangeXs, g.getPlayerCoords().y + randomChangeYs);
 							
 							randomChangeXs = getRandomInt(-20,20);
 							
@@ -652,14 +654,19 @@ function checkTheMap() {
 			
 			if(g.getFreeCharInvCellsCount() >= 16) {
 				
+				working = false;
+
 			}
 			else
 			{
 				invNotFull = false;
-			}
 				
-			working = false;
-			
+				working = false;
+				
+				pickBoughs = false;
+
+			}
+							
 		}
 		
 		}
@@ -676,10 +683,37 @@ function checkTheMap() {
 	
 	working = false;
 	
+	pickBoughs = false;
+	
 	}
 	else
 	{
 		working = false;
+		
+		pickBoughs = false;
+		
 	}
 	
+}
+
+function isPorkStuck() {
+	
+	var playerCoords = g.getPlayerCoords();
+	
+	if (storedPlayerX == playerCoords.x && storedPlayerY == playerCoords.y) {
+		
+		storedPlayerX = playerCoords.x;
+		storedPlayerY = playerCoords.y;
+		
+		return true;
+		
+	} else {
+		
+		storedPlayerX = playerCoords.x;
+		storedPlayerY = playerCoords.y;
+		
+		return false;
+		
+	}
+
 }
