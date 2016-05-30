@@ -4,10 +4,11 @@
  var RedAutoWalkingSwitch = true;
  
  var RedWalkDefault = false;
+ var agroToggle = false;
  
  var WalkToSwitch = false;
  
- 
+var isStuckCooldown = 0;
  
 var directionCount = 0;
 
@@ -52,6 +53,14 @@ function walkTo()
 {
 	g.goTo(toX, toY);
 	var playerCoords = g.getPlayerCoords();
+	if(isStuck())
+		{
+			print('Is stuck! Fixing itself.');
+			RedWalkDefault = true;
+			sleep(second*5);
+			RedWalkDefault = false;
+			print('Try walking again.');
+		}
 	if(getDistance()<toP)
 		{
 			WalkToSwitch = false;
@@ -124,6 +133,35 @@ function chopperToggle()
 		}
 }
 
+function agroToggleSwitch()
+{
+	if(agroToggle)
+		{
+			print('Agro Homing has stopped...');
+			agroToggle = false;
+		}
+	else
+		{
+			print('Agro Homing has resumed...');
+			agroToggle = true;
+		}
+}
+
+function logCollectToggle()
+{
+	if(collectLogs)
+		{
+		print('Log Collecting has stopped...');
+		collectLogs = false;
+		}
+	else
+		{
+		print('Log Collecting has resumed...');
+		collectLogs = true;
+		collectingLogs();
+		}
+}
+
 function defaultWalk()
 {
 		direction();
@@ -162,11 +200,21 @@ function isStuck()
 	var playerCoords = g.getPlayerCoords();
 	if(oldPlayerX == playerCoords.x && oldPlayerY == playerCoords.y)
 	{
-		if(debug)
-			print('Player is stuck!');
-		oldPlayerX = playerCoords.x;
-		oldPlayerY = playerCoords.y;
-		return true;
+		if(isStuckCooldown <= 0)
+			{
+				if(debug)
+					print('Player is stuck!');
+				oldPlayerX = 0;
+				oldPlayerY = 0;
+				isStuckCooldown = 5;
+				return true;
+			}
+		else
+			{
+				isStuckCooldown--;
+				return false;
+			}
+		
 	}
 	else
 	{

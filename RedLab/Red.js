@@ -42,6 +42,28 @@ function onRedPlayerFound(id, isKin, coords) {
  * @param {Array} options Available flower menu options
  */
 function onRedFlowerMenuOpen(options) {
+	g.chooseFlowerMenuOption('Chop');
+	sleep(second*20);
+	print('Chopping and waiting for task to finish.');
+	g.waitForTaskToFinish();
+	print('Task finished, checking if the tree is still there.');
+	if(targetTreeCount <= 3)
+		{
+			regenStamina();
+			walkTo(targetTree.x+getRandomInt(-20,20), targetTree.y+getRandomInt(-20,20), 10);
+			chopTree();
+			targetTreeCount = targetTreeCount+1;
+			onRedFlowerMenuOpen(options);
+		}
+	else
+	{
+		finishedCutting = true;
+		targetTreeCount = 0;
+		treeChoppedList.push(targetTree);
+		targetTree = null;
+		chopWood();
+		
+	}
   // ignored
 }
 
@@ -69,6 +91,18 @@ function onRedUserInput(input) {
   else if(input == 'chop trees')
   {
 	  chopperToggle();
+  }
+  else if(input == 'collect logs')
+  {
+	  logCollectToggle();
+  }
+  else if(input == 'agro toggle')
+  {
+	  logCollectToggle();
+  }
+  else if(input == 'print commands')
+  {
+	print('red target walk, red auto walk, print objects, chop trees, print commands, collect logs, agro toggle, findcurious');  
   }
   else
   {
