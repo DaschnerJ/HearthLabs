@@ -95,7 +95,7 @@ function collectingLogs()
 				{
 					print('Walking to a stockpile...');
 					walkToStart(logStockpileX + getRandomInt(-10,10), logStockpileY + getRandomInt(-10,10), 5);
-					g.mapRightClick(toX + getRandomInt(-10,10), toY + getRandomInt(-10,10));
+					g.mapRightClick(logStockpileX, logStockpileY);
 					if(isStuck())
 						{
 							getDirection();

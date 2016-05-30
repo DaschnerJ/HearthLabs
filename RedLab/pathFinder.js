@@ -200,7 +200,7 @@ function isStuck()
 	var playerCoords = g.getPlayerCoords();
 	if(oldPlayerX == playerCoords.x && oldPlayerY == playerCoords.y)
 	{
-		if(isStuckCooldown <= 0 || !collectLogs)
+		if(isStuckCooldown <= 0 || (!collectLogs && !choppingTrees))
 			{
 				if(debug)
 					print('Player is stuck!');
