@@ -36,9 +36,10 @@ function waitForStamina(target)
 	stamina = g.getStamina()
 	if(stamina < target)
 	{
+		var secondsToWait = Math.ceil((target-stamina)*0.15);
 		print('Stamina not enough, it is: ' + stamina);
-		print('Waiting 10 seconds...')
-		sleep(second*10);
+		print('Waiting '+secondsToWait+' seconds...')
+		sleep(second*secondsToWait);
 		print('Checking stamina again...')
 		waitForStamina(target);
 	}
@@ -93,6 +94,10 @@ function cutTree()
 	else
 	{
 		print('Target tree probably not still there...');
+		sleep(second*2);
+		g.travelToHearthFire();
+		sleep(second*1);
+		g.waitForTaskToFinish();
 		finishedCutting = true;
 		targetTreeCount = 0;
 		treeChoppedList.push(targetTree.id);
@@ -109,8 +114,12 @@ function findClosestTree()
 	  var playerCoords = g.getPlayerCoords();
 	  
 	  var nearestTreeDistance = null;
+	  var distanceToTree = null;
+	  
 	  var mapObjects = g.getAllMapObjects();
-	  for (var i = 0; i < mapObjects.length; ++i) {
+	  
+	  for (var i = 0; i < mapObjects.length; ++i) 
+	  {
 
 	    if (mapObjects[i].name == 'body') {
 	      continue;
@@ -128,10 +137,19 @@ function findClosestTree()
 	    		}
 	    	if(!alreadyChopped)
 	    	{
-	    		var distance = getDistance(playerCoords, mapObjects[i]);
-	    		if (targetTree == null || distance < nearestTreeDistance) {
+	    		
+	    		
+	    			var dx = playerCoords.x - mapObjects[i].coords.x;
+	    			var dy = playerCoords.y - mapObjects[i].coords.y;
+	    			distanceToTree = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+	    			print("dx, dy: " + dx +","+dy);
+	    			print('Testing distance to tree: ' + mapObjects[i].name +', '+mapObjects[i].id+', '+mapObjects[i].coords.x+', '+mapObjects[i].coords.y);
+		    		print('Distance to the tree is: ' + distanceToTree);
+		    		
+	    		if (targetTree == null || distanceToTree < nearestTreeDistance || nearestTreeDistance == null) {
 	    			targetTree = mapObjects[i];
-	    			nearestTreeDistance = distance;
+	    			nearestTreeDistance = distanceToTree;
+	    			print('Distance to the closest tree is: ' + nearestTreeDistance);
 	    		}
 	    	}
 	    }
