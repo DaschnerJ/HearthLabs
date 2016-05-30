@@ -1,11 +1,14 @@
 
 var lookForCurious = false;
 var worldCheckerId = null;
-var checkedTrees = [];
+var checkedBoughTrees = [];
+var checkedBranchTrees = [];
 var fullStockpiles = [];
 var finishedTask = false;
-var working = false;
+var boughWorking = false;
+var branchWorking = false;
 var pickBoughs = false;
+var pickBranches = false;
 var previousLocation = null;
 var storedPlayerX = 0;
 var storedPlayerY = 0;
@@ -113,6 +116,39 @@ function onPorkFlowerMenuOpen(options) {
 	}
 	
 	}
+	else if(pickBranches){
+		
+		var foundBranch = false;
+		
+		for(var i = 0; i < options.length; i++) {
+			
+			if(options[i] == 'Take branch') {
+				
+				g.chooseFlowerMenuOption('Take branch');
+				
+				sleep(second*10);
+				
+				foundBranch = true;
+				
+				finishedTask = true;
+				
+			}
+			
+		}
+		
+		if(!foundBranch) {
+			
+			g.mapRightClick(g.getPlayerCoords().x, g.getPlayerCoords().y);
+			
+			g.chooseFlowerMenuOption(options[0]);
+			
+			g.goTo(g.getPlayerCoords().x + 1, g.getPlayerCoords().y + 1);
+			
+			finishedTask = true;
+			
+		}
+		
+		}
 	
 }
 
@@ -141,6 +177,28 @@ function onPorkUserInput(input) {
 			pickBoughs = true;
 			print('Bough Picking: Enabled');
 		}
+	}
+	else if(input == 'pickbranches') {
+		if(pickBranches) {
+			pickBranches = false;
+			print('Branch Picking: Disabled');
+		}
+		else
+		{
+			pickBranches = true;
+			print('Branch Picking: Enabled');
+		}
+	}
+	else if(input == 'print inventory') {
+		
+		var inv = g.getInvItems();
+		
+		for(var index = 0; index < inv.length; index++) {
+			
+			print(inv[index]);
+			
+		}
+		
 	}
 }
 
@@ -199,8 +257,11 @@ function getPorkMentalWeight(curioName) {
 function checkMap() {
 
 	worldCheckId = setInterval(function() {
-		if(g != null && !working) {
+		if(g != null && !boughWorking) {
 			pickBoughScript();
+		}
+		if(g != null && !branchWorking) {
+			pickBranchScript();
 		}
 	}, second * 10);
 	
@@ -210,7 +271,7 @@ function pickBoughScript() {
 	
 	if(pickBoughs) {
 	
-	working = true;
+	boughWorking = true;
 	
 	var checked = ["alder", "appletree", "ash", "aspen", "baywillow", "beech", 
 	               "birch", "birdcherrytree" ,"buckthorn" ,"cedar" ,"cherry" ,"chestnuttree",
@@ -249,9 +310,9 @@ function pickBoughScript() {
 		
 		if(invNotFull) {
 		
-		for(var x = 0; checkedTrees.length < x; x++) {
+		for(var x = 0; checkedBoughTrees.length < x; x++) {
 						
-			if(checkedTrees[x] == map.id) {
+			if(checkedBoughTrees[x] == map.id) {
 				
 				found = false;
 				
@@ -307,6 +368,8 @@ function pickBoughScript() {
 				if(totalTimesStuck > 20) {
 					
 					print('Stuck too many times... Skipping.');
+					
+					print(map.name + ' with id of ' + map.id + ' was skipped, as it could not be pathed to.');
 					
 					finishedTask = true;
 					
@@ -388,7 +451,7 @@ function pickBoughScript() {
 			
 			g.goTo(g.getPlayerCoords().x,g.getPlayerCoords().y);
 			
-			checkedTrees[checkedTrees.length] = map.id;
+			checkedBoughTrees[checkedBoughTrees.length] = map.id;
 			
 		}
 		
@@ -398,11 +461,15 @@ function pickBoughScript() {
 			
 			print('Inventory needs emptying');
 			
+			previousCoords = g.getPlayerCoords();
+			
+			g.travelToHearthFire();
+			
+			sleep(second*7);
+			
 			index--;
 			
 			index = Math.max(0, index);
-			
-			previousCoords = g.getPlayerCoords();
 			
 			g.goTo(g.getPlayerCoords().x,g.getPlayerCoords().y);
 			
@@ -654,17 +721,89 @@ function pickBoughScript() {
 			
 			if(g.getFreeCharInvCellsCount() >= 16) {
 				
-				working = false;
+				boughWorking = false;
 
 			}
 			else
 			{
 				invNotFull = false;
 				
-				working = false;
+				boughWorking = false;
 				
 				pickBoughs = false;
 
+			}
+			
+			while(g.getPlayerCoords().x != previousCoords.x && g.getPlayerCoords().y != previousCoords.y) {
+				
+				var randomChangeXss = getRandomInt(-10,10);
+				
+				var randomChangeYss = getRandomInt(-10,10);
+				
+				var timesStuckz = 0;
+				
+				var totalTimesStuckz = 0;
+				
+				if(!isPorkStuck()) {
+					
+					timesStuckz = 0;
+					
+					g.goTo(previousCoords.x + randomChangeXss, previousCoords.y  + randomChangeYss);
+					
+					print('Going to previous location');
+					
+					}
+					else
+					{
+					
+					timesStuckz++;
+					
+					totalTimesStuckz++;
+					
+					if(totalTimesStuckz > 50) {
+						
+						print('Stuck too many times... Skipping.');
+						
+						break;
+						
+					}
+					
+					print('Stuck');
+					
+					if(timesStuckz < 4) {
+						
+						randomChangeXss = getRandomInt(-20,20);
+						
+						randomChangeYss = getRandomInt(-20,20);
+						
+						g.goTo(previousCoords.x + randomChangeXss, previousCoords.y + randomChangeYss);
+						
+						if(g.getPlayerCoords().x == previousCoords.x + randomChangeXss && g.getPlayerCoords().y == previousCoords.y + randomChangeYss) {
+							
+							break;
+							
+						}
+						
+					}
+					else
+					{
+						
+						randomChangeXs = getRandomInt(-25,25);
+						
+						randomChangeYs = getRandomInt(-25,25);
+						
+						g.goTo(g.getPlayerCoords().x + randomChangeXs, g.getPlayerCoords().y + randomChangeYs);
+						
+						randomChangeXs = getRandomInt(-20,20);
+						
+						randomChangeYs = getRandomInt(-20,20);
+						
+					}
+					
+					}
+				
+					sleep(second * 1);
+				
 			}
 							
 		}
@@ -673,7 +812,7 @@ function pickBoughScript() {
 		else
 		{
 			
-			working = false;
+			boughWorking = false;
 			
 		}
 		
@@ -681,16 +820,584 @@ function pickBoughScript() {
 	
 	}
 	
-	working = false;
+	boughWorking = false;
 	
 	pickBoughs = false;
 	
 	}
 	else
 	{
-		working = false;
+		boughWorking = false;
 		
 		pickBoughs = false;
+		
+	}
+	
+}
+
+function pickBranchScript() {
+	
+	if(pickBranches) {
+	
+	branchWorking = true;
+	
+	var checked = ["alder", "appletree", "ash", "aspen", "baywillow", "beech", 
+	               "birch", "birdcherrytree" ,"buckthorn" ,"cedar" ,"cherry" ,"chestnuttree",
+	               "conkertree", "corkoak", "crabappletree", "cypress", "elm", "fir", "goldenchain", "hazel",
+	               "hornbeam" ,"juniper" ,"kingsoak" ,"larch" ,"laurel" ,"linden" ,"maple",
+	               "mulberry" ,"oak" ,"olivetree" ,"peatree" ,"pine" ,"planetree" ,"plumtree",
+	               "poplar" ," rowan" ,"sallow" ,"spruce" ,"sweetgum" ,"walnuttree" ,"whitebeam",
+	               "willow" ,"yew"];
+	
+	for(var i = 0; i < checked.length; i++) {
+	
+	var mapObjects = g.getMapObjects(checked[i]);
+	
+	print('Checking for ' + checked[i]);
+	
+	for(var index = 0; index < mapObjects.length ; index++) {
+		
+		if(pickBranches) {
+		
+		var map = mapObjects[index];
+		
+		// - getMapObjects(name)
+		//   Returns an array of map objects with the specified name (each of them has `name`, `fullName`, `id` and `coords` properties)
+		
+		var found = true;
+		
+		var invNotFull = true;
+		
+		if(g.getFreeCharInvCellsCount() >= 16) {
+			
+		}
+		else
+		{
+			invNotFull = false;
+		}
+		
+		if(invNotFull) {
+		
+		for(var x = 0; checkedBranchTrees.length < x; x++) {
+						
+			if(checkedBranchTrees[x] == map.id) {
+				
+				found = false;
+				
+			}
+			
+		}
+		
+		if(found) {
+			
+			print('Found appropriate match.');
+			
+			// - mapObjectRightClick(id)
+			//   Clicks an object with the specified ID via the right mouse button
+			//   NOTE That you can't use this function for some specific objects (for example, tables -- use `openTable` function instead)
+			//   Returns `true` on success or `false` otherwise
+			
+			var xBackup = map.coords.x;
+			
+			var yBackup = map.coords.y;
+			
+			var randomChangeX = getRandomInt(-10,10);
+			
+			var randomChangeY = getRandomInt(-10,10);
+			
+			var timesStuck = 0;
+			
+			var totalTimesStuck = 0;
+			
+			while(g.getPlayerCoords().x != xBackup + randomChangeX && g.getPlayerCoords().y != yBackup + randomChangeY) {
+				
+				if((g.getPlayerCoords().x - (xBackup + randomChangeX)) < 5 && (g.getPlayerCoords().x - (xBackup + randomChangeX)) > -5 && (g.getPlayerCoords().y - (yBackup + randomChangeY)) < 5 && (g.getPlayerCoords().y - (yBackup + randomChangeY)) > -5) {
+					
+					break;
+					
+				}
+				
+				if(!isPorkStuck()) {
+					
+				timesStuck = 0;
+				
+				g.goTo(xBackup + randomChangeX, yBackup + randomChangeY);
+				
+				print('Going');
+				
+				}
+				else
+				{
+				
+				timesStuck++;
+				
+				totalTimesStuck++;
+				
+				if(totalTimesStuck > 20) {
+					
+					print('Stuck too many times... Skipping.');
+					
+					print(map.name + ' with id of ' + map.id + ' was skipped, as it could not be pathed to.');
+					
+					finishedTask = true;
+					
+					break;
+					
+				}
+				
+				print('Stuck');
+				
+				if(timesStuck < 4) {
+					
+					randomChangeX = getRandomInt(-15,15);
+					
+					randomChangeY = getRandomInt(-15,15);
+					
+					g.goTo(xBackup + randomChangeX, yBackup + randomChangeY);
+					
+					if(g.getPlayerCoords().x == xBackup + randomChangeX && g.getPlayerCoords().y == yBackup + randomChangeY) {
+						
+						break;
+						
+					}
+					
+				}
+				else
+				{
+					
+					randomChangeX = getRandomInt(-25,25);
+					
+					randomChangeY = getRandomInt(-25,25);
+					
+					g.goTo(g.getPlayerCoords().x + randomChangeX, g.getPlayerCoords().y + randomChangeY);
+					
+					randomChangeX = getRandomInt(-15,15);
+					
+					randomChangeY = getRandomInt(-15,15);
+					
+				}
+				
+				}
+			
+				sleep(second * 1);
+				
+			}
+			
+			g.mapRightClick(g.getPlayerCoords().x, g.getPlayerCoords().y);
+			
+			print('Found tree');
+			
+			sleep(second);
+			
+			g.mapObjectRightClick(map.id);
+			
+			var timesWaited = 0;
+			
+			while(!finishedTask) {
+				
+				print('Waiting');
+				
+				timesWaited++;
+				
+				if(timesWaited > 20) {
+					
+					break;
+					
+				}
+				else
+				{
+				
+				sleep(second);
+				
+				}
+				
+			}
+			
+			finishedTask = false;
+			
+			print('Finished');
+			
+			g.goTo(g.getPlayerCoords().x,g.getPlayerCoords().y);
+			
+			checkedBranchTrees[checkedBranchTrees.length] = map.id;
+			
+		}
+		
+		}
+		else
+		{
+			
+			print('Inventory needs emptying');
+			
+			previousCoords = g.getPlayerCoords();
+			
+			g.travelToHearthFire();
+			
+			sleep(second*7);
+			
+			index--;
+			
+			index = Math.max(0, index);
+			
+			g.goTo(g.getPlayerCoords().x,g.getPlayerCoords().y);
+			
+			sleep(1000);
+			
+			var stockpiles = g.getMapObjects('stockpile-branch');
+			
+			print('Checking for stockpile-branch');
+			
+			for(var ind = 0; ind < stockpiles.length ; ind++) {
+				
+				var stockpile = stockpiles[ind];
+				
+				var stockFound = true;
+				
+				for(var full = 0; full < fullStockpiles.length; full++) {
+					
+					if(fullStockpiles[i] == stockpile.id) {
+						
+						stockFound = false;
+						
+					}
+					
+				}
+				
+				if(stockFound) {
+					
+					var xBackups = stockpile.coords.x;
+					
+					var yBackups = stockpile.coords.y;
+					
+					var randomChangeXs = getRandomInt(-20,20);
+					
+					var randomChangeYs = getRandomInt(-20,20);
+					
+					var timesStucks = 0;
+					
+					var totalTimesStucks = 0;
+					
+					while(g.getPlayerCoords().x != xBackups + randomChangeXs && g.getPlayerCoords().y != yBackups + randomChangeYs) {
+						
+						if((g.getPlayerCoords().x - (xBackups + randomChangeXs)) < 5 && (g.getPlayerCoords().x - (xBackups + randomChangeXs)) > -5 && (g.getPlayerCoords().y - (yBackups + randomChangeYs)) < 5 && (g.getPlayerCoords().y - (yBackups + randomChangeYs)) > -5) {
+							
+							break;
+							
+						}
+						
+						if(!isPorkStuck()) {
+							
+						timesStucks = 0;
+						
+						g.goTo(xBackups + randomChangeXs, yBackups + randomChangeYs);
+						
+						print('Going to stockpile');
+						
+						}
+						else
+						{
+						
+						timesStucks++;
+						
+						totalTimesStucks++;
+						
+						if(totalTimesStucks > 30) {
+							
+							print('Stuck too many times... Skipping.');
+							
+							break;
+							
+						}
+						
+						print('Stuck');
+						
+						if(timesStucks < 4) {
+							
+							randomChangeXs = getRandomInt(-20,20);
+							
+							randomChangeYs = getRandomInt(-20,20);
+							
+							g.goTo(xBackups + randomChangeXs, yBackups + randomChangeYs);
+							
+							if(g.getPlayerCoords().x == xBackups + randomChangeXs && g.getPlayerCoords().y == yBackups + randomChangeYs) {
+								
+								break;
+								
+							}
+							
+						}
+						else
+						{
+							
+							randomChangeXs = getRandomInt(-25,25);
+							
+							randomChangeYs = getRandomInt(-25,25);
+							
+							g.goTo(g.getPlayerCoords().x + randomChangeXs, g.getPlayerCoords().y + randomChangeYs);
+							
+							randomChangeXs = getRandomInt(-20,20);
+							
+							randomChangeYs = getRandomInt(-20,20);
+							
+						}
+						
+						}
+					
+						sleep(second * 1);
+						
+					}
+					
+					g.mapRightClick(g.getPlayerCoords().x, g.getPlayerCoords().y);
+					
+					print('Found stockpile.');
+					
+					sleep(second);
+					
+					g.mapObjectRightClick(stockpile.id);
+					
+					sleep(second*5);
+					
+					var stockpileInfo = g.getStockpileInfo();
+					
+					if(stockpileInfo != null) {
+						
+						print('Unloading inventory');
+						
+						var items = g.getInvItems();
+						
+						var total = stockpileInfo.total;
+						
+						var used = stockpileInfo.used;
+						
+						for(var z = 0; z < items.length; z++) {
+							
+							for(var boughCheck = 0; boughCheck < checked.length; boughCheck++) {
+								
+								if(items[z] == 'branch') {
+									
+									if(used < total) {
+										
+										sleep(second);
+										
+										g.takeItem(items[z]);
+										
+										sleep(second);
+										
+										g.useItemFromHandOnObject(stockpile.id);
+										
+										sleep(second * 0.5);
+										
+										used++;
+										
+									}
+									else
+									{
+										
+										fullStockpiles[fullStockpiles.length] = stockpile.id;
+										
+									}
+									
+									break;
+									
+								}
+								
+							}
+							
+						}
+						
+					}
+					else
+					{
+						
+						var timesTried = 0;
+						
+						var success = false;
+						
+						while(timesTried < 10) {
+							
+							timesTried++;
+							
+							g.mapObjectRightClick(stockpile.id);
+							
+							sleep(second);
+							
+							if(g.getStockpileInfo() != null) {
+								
+								success = true;
+								
+							}
+							
+						}
+						
+						if(success) {
+							
+							stockpileInfo = g.getStockpileInfo();
+							
+							print('Unloading inventory');
+							
+							var items = g.getInvItems();
+							
+							var total = stockpileInfo.total;
+							
+							var used = stockpileInfo.used;
+							
+							for(var z = 0; z < items.length; z++) {
+								
+								for(var boughCheck = 0; boughCheck < checked.length; boughCheck++) {
+									
+									if(items[z] == 'branch') {
+										
+										if(used < total) {
+											
+											sleep(second);
+											
+											g.takeItem(items[z]);
+											
+											sleep(second);
+											
+											g.useItemFromHandOnObject(stockpile.id);
+											
+											sleep(second * 0.5);
+											
+											used++;
+											
+										}
+										else
+										{
+											
+											fullStockpiles[fullStockpiles.length] = stockpile.id;
+											
+										}
+										
+										break;
+										
+									}
+									
+								}
+								
+							}
+							
+						}
+						
+					}
+					
+					print('Finished with stockpile');
+					
+				}
+				
+			}
+			
+			if(g.getFreeCharInvCellsCount() >= 16) {
+				
+				branchWorking = false;
+
+			}
+			else
+			{
+				invNotFull = false;
+				
+				branchWorking = false;
+				
+				pickBranches = false;
+
+			}
+			
+			while(g.getPlayerCoords().x != previousCoords.x && g.getPlayerCoords().y != previousCoords.y) {
+				
+				var randomChangeXss = getRandomInt(-10,10);
+				
+				var randomChangeYss = getRandomInt(-10,10);
+				
+				var timesStuckz = 0;
+				
+				var totalTimesStuckz = 0;
+				
+				if(!isPorkStuck()) {
+					
+					timesStuckz = 0;
+					
+					g.goTo(previousCoords.x + randomChangeXss, previousCoords.y  + randomChangeYss);
+					
+					print('Going to previous location');
+					
+					}
+					else
+					{
+					
+					timesStuckz++;
+					
+					totalTimesStuckz++;
+					
+					if(totalTimesStuckz > 50) {
+						
+						print('Stuck too many times... Skipping.');
+						
+						break;
+						
+					}
+					
+					print('Stuck');
+					
+					if(timesStuckz < 4) {
+						
+						randomChangeXss = getRandomInt(-20,20);
+						
+						randomChangeYss = getRandomInt(-20,20);
+						
+						g.goTo(previousCoords.x + randomChangeXss, previousCoords.y + randomChangeYss);
+						
+						if(g.getPlayerCoords().x == previousCoords.x + randomChangeXss && g.getPlayerCoords().y == previousCoords.y + randomChangeYss) {
+							
+							break;
+							
+						}
+						
+					}
+					else
+					{
+						
+						randomChangeXs = getRandomInt(-25,25);
+						
+						randomChangeYs = getRandomInt(-25,25);
+						
+						g.goTo(g.getPlayerCoords().x + randomChangeXs, g.getPlayerCoords().y + randomChangeYs);
+						
+						randomChangeXs = getRandomInt(-20,20);
+						
+						randomChangeYs = getRandomInt(-20,20);
+						
+					}
+					
+					}
+				
+					sleep(second * 1);
+				
+			}
+							
+		}
+		
+		}
+		else
+		{
+			
+			branchWorking = false;
+			
+		}
+		
+	}
+	
+	}
+	
+	branchWorking = false;
+	
+	pickBranches = false;
+	
+	}
+	else
+	{
+		branchWorking = false;
+		
+		pickBranches = false;
 		
 	}
 	
