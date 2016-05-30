@@ -485,8 +485,10 @@ function stopAutoWalking() {
  * @return {Boolean} true if the specified animal is aggressive or false otherwise
  */
 function isAggr(animal) {
-	
-  return animal == "badger" || animal == "lynx" || animal == "bat" || animal == "bear" || animal == "boar" || isRedAggr(animal) || isPorkAggr(animal); // etc
+	if(agroToggle)
+		return animal == "badger" || animal == "lynx" || animal == "bat" || animal == "bear" || animal == "boar" || isRedAggr(animal) || isPorkAggr(animal); // etc
+	else
+		return false;
 }
 
 /** Returns a mental weight of the specified curio (NOTE that this function is incomplete)

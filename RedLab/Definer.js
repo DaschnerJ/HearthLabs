@@ -12,3 +12,7 @@ function isTree(tree) {
   tree == "willow" || tree == "yew"; // etc
 }
 
+function isLog(log) {
+	return log.name.endsWith('log');
+}
+
