@@ -24,11 +24,13 @@ var toP = 0;
 
 function gameStart()
 {
-  print('Travel to hearth fire...');
-  g.travelToHearthFire();
-  if(debug)
-  print('Sleep 10 seconds...');
-  sleep(second*10);
+	if(debug){
+		print('Travel to hearth fire...');
+		g.travelToHearthFire();
+		if(debug)
+			print('Sleep 10 seconds...');
+		sleep(second*10);
+	}
   print('Starting autowalking...');
   startAutoWalking();
 }
