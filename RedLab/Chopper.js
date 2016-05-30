@@ -18,11 +18,26 @@ function chopWood()
 		print('Finding closest tree...');
 		findClosestTree();
 		print('Found closest tree! Now walking to it.');
-		walkTo(targetTree.x+getRandomInt(-20,20), targetTree.y+getRandomInt(-20,20), 10);
 		print('The target is: ' + targetTree.name);
 		print('Chopping tree.')
-		chopTree();
-		sleep(second*5);
+		walkToStart(targetTree.coords.x+getRandomInt(-20,20), targetTree.coords.y+getRandomInt(-20,20), 10);
+		if(getDistance()<toP)
+		{
+			print('Is near tree, now chopping the tree.')
+			chopTree();
+			sleep(second*5);
+		}
+		else
+		{
+			print('Is not near the tree, walking closer.')
+			walkTo();
+			if(isStuck())
+			{
+				var playerCoords = g.getPlayerCoords();
+				getDirection();
+				g.mapRightClick(playerCoords.x + xDirection*getRandomInt(20,40), playerCoords.y + yDirection*getRandomInt(20,40));
+			}
+		}
 	}
 }
 
@@ -82,12 +97,12 @@ function cutTree()
 	print('Chopping and waiting for task to finish.');
 	g.waitForTaskToFinish();
 	print('Task finished, checking if the tree is still there.');
-	if(targetTreeCount <= 10)
+	if(targetTreeCount <= 4)
 	{
 		targetTreeCount++;
 		print('Target tree probably still there, count is: ' + targetTreeCount);
 		regenStamina();
-		walkTo(targetTree.x+getRandomInt(-20,20), targetTree.y+getRandomInt(-20,20), 10);
+		walkToStart(targetTree.coords.x+getRandomInt(-20,20), targetTree.coords.y+getRandomInt(-20,20), 5);
 		chopTree();
 		
 	}
