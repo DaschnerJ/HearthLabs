@@ -43,6 +43,8 @@ function chopWood()
 
 function regenStamina()
 {
+	WalkToSwitch = false;
+	RedWalkDefault = false;
 	waitForStamina(95);
 }
 
