@@ -13,13 +13,13 @@ function walk()
 			defaultWalk();
 		}
 	else if(WalkToSwitch)
-	{
-		walkTo();
-	}
+		{
+			walkTo();
+		}
 	else
-	{
+		{
 		
-	}
+		}
 }
 
 /**
