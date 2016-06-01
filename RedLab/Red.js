@@ -101,11 +101,11 @@ function onRedUserInput(input) {
   }
   else if(input == 'agro toggle')
   {
-	  logCollectToggle();
+	  agroToggleSwitch();
   }
   else if(input == 'print commands')
   {
-	print('red target walk, red auto walk, print objects, chop trees, print commands, collect logs, agro toggle, findcurious');  
+	print('red walk, red target walk, red auto walk, print objects, chop trees, print commands, collect logs, agro toggle, findcurious');  
   }
   else
   {

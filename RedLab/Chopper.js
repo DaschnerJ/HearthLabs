@@ -2,12 +2,7 @@
  * 
  */
 
-var choppingTrees = false;
-var finishedCutting = true;
-var targetTree;
-var stamina;
-var targetTreeCount = 0;
-var treeChoppedList = new Array();
+
 
 function chopWood()
 {

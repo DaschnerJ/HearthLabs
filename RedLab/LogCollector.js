@@ -2,20 +2,6 @@
  * 
  */
 
-var collectLogs = false;
-var listOfLogs = new Array();
-var listOfCollectedLogs = new Array();
-var targetLog = null;
-var hearthX = 0;
-var hearthY = 0;
-
-var logStockpileX = 0;
-var logStockpileY = 0;
-
-var holdingLog = false;
-
-
-
 function collectingLogs()
 {
 	sleep(second*2);
