@@ -42,31 +42,7 @@ function onRedPlayerFound(id, isKin, coords) {
  * @param {Array} options Available flower menu options
  */
 function onRedFlowerMenuOpen(options) {
-	if(choppingTrees)
-		{
-		g.chooseFlowerMenuOption('Chop');
-		sleep(second*20);
-		print('Chopping and waiting for task to finish.');
-		g.waitForTaskToFinish();
-		print('Task finished, checking if the tree is still there.');
-		if(targetTreeCount <= 3)
-		{
-			regenStamina();
-			walkTo(targetTree.x+getRandomInt(-20,20), targetTree.y+getRandomInt(-20,20), 10);
-			chopTree();
-			targetTreeCount = targetTreeCount+1;
-			onRedFlowerMenuOpen(options);
-		}
-		else
-		{
-			inishedCutting = true;
-			targetTreeCount = 0;
-			treeChoppedList.push(targetTree);
-			targetTree = null;
-			chopWood();
-		
-		}
-	}
+	
   // ignored
 }
 
@@ -74,7 +50,7 @@ function onRedFlowerMenuOpen(options) {
  * @param {String} input User command
  */
 function onRedUserInput(input) {
-  //Checks for red command
+  //Checks for red's command
   if(input == 'red walk')
   {
 	  walkDefaultToggle();
@@ -91,21 +67,45 @@ function onRedUserInput(input) {
   {
 	  printObjectNamesOnScreen();
   }
-  else if(input == 'chop trees')
-  {
-	  chopperToggle();
-  }
-  else if(input == 'collect logs')
-  {
-	  logCollectToggle();
-  }
   else if(input == 'agro toggle')
   {
 	  agroToggleSwitch();
   }
+  else if(input == 'qchopper')
+  {
+	  qChopperToggle();
+  }
+  else if(input == 'qblocker')
+  {
+	  qBlockChopperToggle();
+  }
+  else if(input == 'qboarder')
+  {
+	  qBoardCutterToggle();
+  }
+  else if(input == 'qstumper')
+  {
+	  qStumperToggle();
+  }
+  else if(input == 'qlandforager')
+  {
+	  qLandForagerToggle();
+  }
+  else if(input == 'beast hostile')
+  {
+	  allowHostileToggle();
+  }
+  else if(input == 'beast player')
+  {
+	  allowPlayerToggle();
+  }
+  else if(input == 'beast friendly')
+  {
+	  allowFriendlyToggle();
+  }
   else if(input == 'print commands')
   {
-	print('red walk, red target walk, red auto walk, print objects, chop trees, print commands, collect logs, agro toggle, findcurious');  
+	print('red walk, red target walk, red auto walk, print objects, print commands, agro toggle, findcurious, qchopper, qstumper, pickbranches, pickboughs, beast hostile, beast friendly, beast player');  
   }
   else
   {

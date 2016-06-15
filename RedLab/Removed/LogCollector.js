@@ -1,7 +1,7 @@
 /**
  * 
  */
-
+/*
 function collectingLogs()
 {
 	sleep(second*2);
@@ -125,3 +125,4 @@ function findMoreLogs()
 {
 	
 }
+*/

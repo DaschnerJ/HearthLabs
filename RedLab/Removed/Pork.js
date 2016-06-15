@@ -273,13 +273,9 @@ function pickBoughScript() {
 	
 	boughWorking = true;
 	
-	var checked = ["alder", "appletree", "ash", "aspen", "baywillow", "beech", 
-	               "birch", "birdcherrytree" ,"buckthorn" ,"cedar" ,"cherry" ,"chestnuttree",
-	               "conkertree", "corkoak", "crabappletree", "cypress", "elm", "fir", "goldenchain", "hazel",
-	               "hornbeam" ,"juniper" ,"kingsoak" ,"larch" ,"laurel" ,"linden" ,"maple",
-	               "mulberry" ,"oak" ,"olivetree" ,"peatree" ,"pine" ,"planetree" ,"plumtree",
-	               "poplar" ," rowan" ,"sallow" ,"spruce" ,"sweetgum" ,"walnuttree" ,"whitebeam",
-	               "willow" ,"yew"];
+	var checked = ["alder", 
+	               "elm", "fir",
+	               "spruce" ,"yew"];
 	
 	for(var i = 0; i < checked.length; i++) {
 	
@@ -322,7 +318,7 @@ function pickBoughScript() {
 		
 		if(found) {
 			
-			print('Found appropriate match.');
+			//print('Found appropriate match.');
 			
 			// - mapObjectRightClick(id)
 			//   Clicks an object with the specified ID via the right mouse button
@@ -355,7 +351,7 @@ function pickBoughScript() {
 				
 				g.goTo(xBackup + randomChangeX, yBackup + randomChangeY);
 				
-				print('Going');
+				//print('Going');
 				
 				}
 				else
@@ -417,7 +413,7 @@ function pickBoughScript() {
 			
 			g.mapRightClick(g.getPlayerCoords().x, g.getPlayerCoords().y);
 			
-			print('Found tree');
+			//print('Found tree');
 			
 			sleep(second);
 			
@@ -447,7 +443,7 @@ function pickBoughScript() {
 			
 			finishedTask = false;
 			
-			print('Finished');
+			//print('Finished');
 			
 			g.goTo(g.getPlayerCoords().x,g.getPlayerCoords().y);
 			
@@ -462,7 +458,7 @@ function pickBoughScript() {
 			print('Inventory needs emptying');
 			
 			previousCoords = g.getPlayerCoords();
-			
+			hearthHome();
 			g.travelToHearthFire();
 			
 			sleep(second*7);
@@ -523,7 +519,7 @@ function pickBoughScript() {
 						
 						g.goTo(xBackups + randomChangeXs, yBackups + randomChangeYs);
 						
-						print('Going to stockpile');
+						//print('Going to stockpile');
 						
 						}
 						else
@@ -541,7 +537,7 @@ function pickBoughScript() {
 							
 						}
 						
-						print('Stuck');
+						//print('Stuck');
 						
 						if(timesStucks < 4) {
 							
@@ -665,7 +661,7 @@ function pickBoughScript() {
 							
 							stockpileInfo = g.getStockpileInfo();
 							
-							print('Unloading inventory');
+							//print('Unloading inventory');
 							
 							var items = g.getInvItems();
 							
@@ -768,7 +764,7 @@ function pickBoughScript() {
 						
 					}
 					
-					print('Stuck');
+					//print('Stuck');
 					
 					if(timesStuckz < 4) {
 						
@@ -853,7 +849,7 @@ function pickBranchScript() {
 	
 	var mapObjects = g.getMapObjects(checked[i]);
 	
-	print('Checking for ' + checked[i]);
+	//print('Checking for ' + checked[i]);
 	
 	for(var index = 0; index < mapObjects.length ; index++) {
 		
@@ -923,7 +919,7 @@ function pickBranchScript() {
 				
 				g.goTo(xBackup + randomChangeX, yBackup + randomChangeY);
 				
-				print('Going');
+				//print('Going');
 				
 				}
 				else
@@ -945,7 +941,7 @@ function pickBranchScript() {
 					
 				}
 				
-				print('Stuck');
+				//print('Stuck');
 				
 				if(timesStuck < 4) {
 					
@@ -995,7 +991,7 @@ function pickBranchScript() {
 			
 			while(!finishedTask) {
 				
-				print('Waiting');
+				//print('Waiting');
 				
 				timesWaited++;
 				
@@ -1030,7 +1026,7 @@ function pickBranchScript() {
 			print('Inventory needs emptying');
 			
 			previousCoords = g.getPlayerCoords();
-			
+			hearthHome();
 			g.travelToHearthFire();
 			
 			sleep(second*7);
@@ -1091,7 +1087,7 @@ function pickBranchScript() {
 						
 						g.goTo(xBackups + randomChangeXs, yBackups + randomChangeYs);
 						
-						print('Going to stockpile');
+						//print('Going to stockpile');
 						
 						}
 						else
@@ -1109,7 +1105,7 @@ function pickBranchScript() {
 							
 						}
 						
-						print('Stuck');
+						//print('Stuck');
 						
 						if(timesStucks < 4) {
 							
@@ -1336,7 +1332,7 @@ function pickBranchScript() {
 						
 					}
 					
-					print('Stuck');
+					//print('Stuck');
 					
 					if(timesStuckz < 4) {
 						

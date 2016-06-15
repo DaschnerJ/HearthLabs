@@ -35,14 +35,6 @@
  */
 var g = null;
 
-/**
- * A game second.
- */
-
-var second = 1000;
-
-var debug = false;
-
 
 /**
  * ID of the autowalking timer

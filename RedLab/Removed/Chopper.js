@@ -3,7 +3,7 @@
  */
 
 
-
+/*
 function chopWood()
 {
 	while(choppingTrees)
@@ -36,46 +36,6 @@ function chopWood()
 	}
 }
 
-function regenStamina()
-{
-	WalkToSwitch = false
-	RedWalkDefault = false
-	waitForStamina(95)
-}
-
-function waitForStamina(target)
-{
-	stamina = g.getStamina()
-	if(stamina < target)
-	{
-		var secondsToWait = Math.ceil((target-stamina)*6.666);
-		print('Stamina not enough, it is: ' + stamina);
-		print('Waiting '+secondsToWait+' seconds...')
-		sleep(second*secondsToWait);
-		print('Checking stamina again...')
-		waitForStamina(target);
-	}
-}
-
-function pickOption(option, options)
-{
-	 
-	if(options.length != null || options.length == 0)
-	{
-		print('Options length is: ' + options.length)
-		for(var i = 0; i < options.length; i++) {
-			print(option[i]);
-			if(options[i] == option) {
-   
-				g.chooseFlowerMenuOption(option);
-				return true;
-   
-			}
-		}
-	}
-	return false;
-	 
-}
 
 function chopTree()
 {
@@ -173,3 +133,4 @@ function findClosestTree()
 	  }
 
 }
+*/
